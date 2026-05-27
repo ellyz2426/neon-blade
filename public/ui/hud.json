@@ -25,7 +25,7 @@
               "100"
             ],
             "properties": {
-              "id": "player-hp",
+              "id": "health-player",
               "class": "value"
             },
             "dataUid": "uid-4"
@@ -58,7 +58,7 @@
               "100"
             ],
             "properties": {
-              "id": "opp-hp",
+              "id": "health-opp",
               "class": "value"
             },
             "dataUid": "uid-7"
@@ -91,7 +91,7 @@
               "100"
             ],
             "properties": {
-              "id": "stamina",
+              "id": "stamina-player",
               "class": "value"
             },
             "dataUid": "uid-10"
@@ -110,7 +110,7 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
-              "RND"
+              "SCORE"
             ],
             "properties": {
               "class": "label"
@@ -121,10 +121,10 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
-              "1"
+              "0"
             ],
             "properties": {
-              "id": "round",
+              "id": "score",
               "class": "value"
             },
             "dataUid": "uid-13"
@@ -154,7 +154,7 @@
             "sourceTag": "span",
             "type": "custom",
             "children": [
-              "60"
+              "--"
             ],
             "properties": {
               "id": "time",
@@ -199,7 +199,10 @@
       "content": {
         "display": "flex",
         "flexDirection": "row",
-        "padding": "1.5",
+        "paddingTop": "1.5",
+        "paddingBottom": "1.5",
+        "paddingLeft": "1.5",
+        "paddingRight": "1.5",
         "backgroundColor": "rgba(0,0,0,0.8)",
         "borderColor": "#00ffff",
         "borderWidth": "0.1",
@@ -325,7 +328,7 @@
       },
       "end": {
         "line": 10,
-        "column": 49
+        "column": 53
       }
     },
     "uid-5": {
@@ -355,7 +358,7 @@
       },
       "end": {
         "line": 14,
-        "column": 46
+        "column": 50
       }
     },
     "uid-8": {
@@ -385,7 +388,7 @@
       },
       "end": {
         "line": 18,
-        "column": 47
+        "column": 54
       }
     },
     "uid-11": {
@@ -405,7 +408,7 @@
       },
       "end": {
         "line": 21,
-        "column": 34
+        "column": 36
       }
     },
     "uid-13": {

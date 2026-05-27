@@ -144,7 +144,10 @@
       "content": {
         "display": "flex",
         "flexDirection": "column",
-        "padding": "2.5",
+        "paddingTop": "2.5",
+        "paddingBottom": "2.5",
+        "paddingLeft": "2.5",
+        "paddingRight": "2.5",
         "backgroundColor": "rgba(0,0,0,0.85)",
         "borderColor": "#00ff00",
         "borderWidth": "0.15",
@@ -183,7 +186,8 @@
     },
     "btn": {
       "content": {
-        "padding": "1",
+        "paddingTop": "1",
+        "paddingBottom": "1",
         "paddingLeft": "2.5",
         "paddingRight": "2.5",
         "backgroundColor": "rgba(0,255,0,0.15)",

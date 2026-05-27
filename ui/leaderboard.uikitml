@@ -1,0 +1,17 @@
+<style>
+.panel { display: flex; flex-direction: column; padding-top: 3; padding-bottom: 3; padding-left: 3; padding-right: 3; background-color: rgba(0,0,0,0.85); border-color: #00ffff; border-width: 0.15; border-radius: 1; align-items: center; width: 60vw; }
+.title { font-size: 4; color: #00ffff; font-weight: bold; margin-bottom: 2; }
+.row { display: flex; flex-direction: row; justify-content: space-between; width: 100%; padding-top: 0.6; padding-bottom: 0.6; }
+.rank { font-size: 2; color: #ffffff; width: 10%; }
+.name { font-size: 2; color: #ffffff; width: 50%; }
+.score { font-size: 2; color: #ffff00; width: 40%; text-align: right; }
+.btn { padding-top: 1.2; padding-bottom: 1.2; padding-left: 3; padding-right: 3; background-color: rgba(0,255,255,0.2); border-color: #00ffff; border-width: 0.1; border-radius: 0.8; margin-top: 2; cursor: pointer; }
+.btn-text { font-size: 2; color: #ffffff; }
+</style>
+<div class="panel">
+  <span class="title">LEADERBOARD</span>
+  <div class="row"><span class="rank">#1</span><span class="name">---</span><span class="score">-----</span></div>
+  <div class="row"><span class="rank">#2</span><span class="name">---</span><span class="score">-----</span></div>
+  <div class="row"><span class="rank">#3</span><span class="name">---</span><span class="score">-----</span></div>
+  <button id="back-btn" class="btn" cursor="pointer"><span class="btn-text">BACK</span></button>
+</div>

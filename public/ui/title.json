@@ -7,7 +7,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "NEON BOXING"
+          "NEON BLADE"
         ],
         "properties": {
           "class": "title"
@@ -18,7 +18,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "HOLODECK FIGHT CLUB"
+          "DUEL VR"
         ],
         "properties": {
           "class": "subtitle"
@@ -42,7 +42,7 @@
           }
         ],
         "properties": {
-          "id": "btn-start",
+          "id": "start-btn",
           "class": "btn",
           "cursor": "pointer"
         },
@@ -59,9 +59,12 @@
       "content": {
         "display": "flex",
         "flexDirection": "column",
-        "padding": "3",
+        "paddingTop": "3",
+        "paddingBottom": "3",
+        "paddingLeft": "3",
+        "paddingRight": "3",
         "backgroundColor": "rgba(0,0,0,0.85)",
-        "borderColor": "#ff00ff",
+        "borderColor": "#00ffff",
         "borderWidth": "0.15",
         "borderRadius": 1,
         "alignItems": "center"
@@ -70,7 +73,7 @@
     "title": {
       "content": {
         "fontSize": "5",
-        "color": "#ff00ff",
+        "color": "#00ffff",
         "fontWeight": "bold",
         "marginBottom": "2"
       }
@@ -78,17 +81,18 @@
     "subtitle": {
       "content": {
         "fontSize": "1.8",
-        "color": "#00ffff",
+        "color": "#ff00ff",
         "marginBottom": "3"
       }
     },
     "btn": {
       "content": {
-        "padding": "1.5",
+        "paddingTop": "1.5",
+        "paddingBottom": "1.5",
         "paddingLeft": "4",
         "paddingRight": "4",
-        "backgroundColor": "rgba(255,0,255,0.2)",
-        "borderColor": "#ff00ff",
+        "backgroundColor": "rgba(0,255,255,0.2)",
+        "borderColor": "#00ffff",
         "borderWidth": "0.1",
         "borderRadius": 0.8,
         "marginTop": "1.5",
@@ -171,7 +175,7 @@
       },
       "end": {
         "line": 8,
-        "column": 40
+        "column": 39
       }
     },
     "uid-3": {
@@ -181,7 +185,7 @@
       },
       "end": {
         "line": 9,
-        "column": 51
+        "column": 39
       }
     },
     "uid-4": {

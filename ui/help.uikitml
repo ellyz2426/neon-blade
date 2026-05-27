@@ -1,20 +1,21 @@
 <style>
-.panel { display: flex; flex-direction: column; padding: 2.5; background-color: rgba(0,0,0,0.85); border-color: #00ffff; border-width: 0.15; border-radius: 1; width: 100%; }
+.panel { display: flex; flex-direction: column; padding-top: 2.5; padding-bottom: 2.5; padding-left: 2.5; padding-right: 2.5; background-color: rgba(0,0,0,0.85); border-color: #00ffff; border-width: 0.15; border-radius: 1; width: 100%; }
 .title { font-size: 3; color: #00ffff; font-weight: bold; margin-bottom: 1.5; align-self: center; }
 .section { font-size: 1.8; color: #ff00ff; font-weight: bold; margin-top: 1; }
 .text { font-size: 1.4; color: #ffffff; margin-top: 0.3; }
-.btn { padding: 1; padding-left: 2.5; padding-right: 2.5; background-color: rgba(0,255,255,0.15); border-color: #00ffff; border-width: 0.1; border-radius: 0.7; margin-top: 2; cursor: pointer; align-self: center; }
+.btn { padding-top: 1; padding-bottom: 1; padding-left: 2.5; padding-right: 2.5; background-color: rgba(0,255,255,0.15); border-color: #00ffff; border-width: 0.1; border-radius: 0.7; margin-top: 2; cursor: pointer; align-self: center; }
 .btn-text { font-size: 2; color: #ffffff; }
 </style>
 <div class="panel">
   <span class="title">CONTROLS</span>
   <span class="section">VR:</span>
-  <span class="text">Trigger = Punch / Grip = Block</span>
-  <span class="text">Move controller fast forward to punch</span>
+  <span class="text">Trigger = Swing / Grip = Block/Parry</span>
+  <span class="text">Thumbstick Y = Stance High/Mid/Low</span>
+  <span class="text">A/B = Menu Confirm/Back</span>
   <span class="section">Browser:</span>
-  <span class="text">Space = Punch / Shift = Block</span>
-  <span class="text">Mouse aim at opponent</span>
-  <span class="section">PUNCH TYPES:</span>
-  <span class="text">High = Uppercut / Wide = Hook / Straight = Jab/Cross</span>
+  <span class="text">Space = Swing / Shift = Block</span>
+  <span class="text">Q/E = Stance High/Low</span>
+  <span class="section">STANCES:</span>
+  <span class="text">High beats Low, Low beats Mid, Mid beats High</span>
   <button id="btn-help-back" class="btn" cursor="pointer"><span class="btn-text">BACK</span></button>
 </div>

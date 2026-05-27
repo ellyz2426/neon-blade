@@ -1,14 +1,14 @@
 <style>
-.panel { display: flex; flex-direction: column; padding: 3; background-color: rgba(0,0,0,0.85); border-color: #ff00ff; border-width: 0.15; border-radius: 1; align-items: center; }
-.title { font-size: 5; color: #ff00ff; font-weight: bold; margin-bottom: 2; }
-.subtitle { font-size: 1.8; color: #00ffff; margin-bottom: 3; }
-.btn { padding: 1.5; padding-left: 4; padding-right: 4; background-color: rgba(255,0,255,0.2); border-color: #ff00ff; border-width: 0.1; border-radius: 0.8; margin-top: 1.5; cursor: pointer; }
+.panel { display: flex; flex-direction: column; padding-top: 3; padding-bottom: 3; padding-left: 3; padding-right: 3; background-color: rgba(0,0,0,0.85); border-color: #00ffff; border-width: 0.15; border-radius: 1; align-items: center; }
+.title { font-size: 5; color: #00ffff; font-weight: bold; margin-bottom: 2; }
+.subtitle { font-size: 1.8; color: #ff00ff; margin-bottom: 3; }
+.btn { padding-top: 1.5; padding-bottom: 1.5; padding-left: 4; padding-right: 4; background-color: rgba(0,255,255,0.2); border-color: #00ffff; border-width: 0.1; border-radius: 0.8; margin-top: 1.5; cursor: pointer; }
 .btn-text { font-size: 2.5; color: #ffffff; font-weight: bold; }
 </style>
 <div class="panel">
-  <span class="title">NEON BOXING</span>
-  <span class="subtitle">HOLODECK FIGHT CLUB</span>
-  <button id="btn-start" class="btn" cursor="pointer">
+  <span class="title">NEON BLADE</span>
+  <span class="subtitle">DUEL VR</span>
+  <button id="start-btn" class="btn" cursor="pointer">
     <span class="btn-text">START</span>
   </button>
 </div>

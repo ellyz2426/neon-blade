@@ -7,7 +7,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "FIGHT OVER"
+          "DUEL OVER"
         ],
         "properties": {
           "class": "title"
@@ -18,10 +18,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "YOU WIN"
+          "VICTORY"
         ],
         "properties": {
-          "id": "result-text",
+          "id": "result",
           "class": "subtitle"
         },
         "dataUid": "uid-3"
@@ -33,7 +33,7 @@
           "SCORE: 0"
         ],
         "properties": {
-          "id": "score-text",
+          "id": "final-score",
           "class": "stat"
         },
         "dataUid": "uid-4"
@@ -42,10 +42,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "PUNCHES: 0/0"
+          "MAX COMBO: x0"
         ],
         "properties": {
-          "id": "stats-text",
+          "id": "max-combo",
           "class": "stat"
         },
         "dataUid": "uid-5"
@@ -107,7 +107,10 @@
       "content": {
         "display": "flex",
         "flexDirection": "column",
-        "padding": "3",
+        "paddingTop": "3",
+        "paddingBottom": "3",
+        "paddingLeft": "3",
+        "paddingRight": "3",
         "backgroundColor": "rgba(0,0,0,0.9)",
         "borderColor": "#ff00ff",
         "borderWidth": "0.15",
@@ -139,7 +142,8 @@
     },
     "btn": {
       "content": {
-        "padding": "1.2",
+        "paddingTop": "1.2",
+        "paddingBottom": "1.2",
         "paddingLeft": "3",
         "paddingRight": "3",
         "backgroundColor": "rgba(255,0,255,0.2)",
@@ -235,7 +239,7 @@
       },
       "end": {
         "line": 9,
-        "column": 39
+        "column": 38
       }
     },
     "uid-3": {
@@ -245,7 +249,7 @@
       },
       "end": {
         "line": 10,
-        "column": 56
+        "column": 51
       }
     },
     "uid-4": {
@@ -255,7 +259,7 @@
       },
       "end": {
         "line": 11,
-        "column": 52
+        "column": 53
       }
     },
     "uid-5": {

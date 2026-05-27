@@ -29,7 +29,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Trigger = Punch / Grip = Block"
+          "Trigger = Swing / Grip = Block/Parry"
         ],
         "properties": {
           "class": "text"
@@ -40,7 +40,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Move controller fast forward to punch"
+          "Thumbstick Y = Stance High/Mid/Low"
         ],
         "properties": {
           "class": "text"
@@ -51,10 +51,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Browser:"
+          "A/B = Menu Confirm/Back"
         ],
         "properties": {
-          "class": "section"
+          "class": "text"
         },
         "dataUid": "uid-6"
       },
@@ -62,10 +62,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Space = Punch / Shift = Block"
+          "Browser:"
         ],
         "properties": {
-          "class": "text"
+          "class": "section"
         },
         "dataUid": "uid-7"
       },
@@ -73,7 +73,7 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "Mouse aim at opponent"
+          "Space = Swing / Shift = Block"
         ],
         "properties": {
           "class": "text"
@@ -84,10 +84,10 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "PUNCH TYPES:"
+          "Q/E = Stance High/Low"
         ],
         "properties": {
-          "class": "section"
+          "class": "text"
         },
         "dataUid": "uid-9"
       },
@@ -95,12 +95,23 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "High = Uppercut / Wide = Hook / Straight = Jab/Cross"
+          "STANCES:"
+        ],
+        "properties": {
+          "class": "section"
+        },
+        "dataUid": "uid-10"
+      },
+      {
+        "sourceTag": "span",
+        "type": "custom",
+        "children": [
+          "High beats Low, Low beats Mid, Mid beats High"
         ],
         "properties": {
           "class": "text"
         },
-        "dataUid": "uid-10"
+        "dataUid": "uid-11"
       },
       {
         "sourceTag": "button",
@@ -115,7 +126,7 @@
             "properties": {
               "class": "btn-text"
             },
-            "dataUid": "uid-12"
+            "dataUid": "uid-13"
           }
         ],
         "properties": {
@@ -123,7 +134,7 @@
           "class": "btn",
           "cursor": "pointer"
         },
-        "dataUid": "uid-11"
+        "dataUid": "uid-12"
       }
     ],
     "properties": {
@@ -136,7 +147,10 @@
       "content": {
         "display": "flex",
         "flexDirection": "column",
-        "padding": "2.5",
+        "paddingTop": "2.5",
+        "paddingBottom": "2.5",
+        "paddingLeft": "2.5",
+        "paddingRight": "2.5",
         "backgroundColor": "rgba(0,0,0,0.85)",
         "borderColor": "#00ffff",
         "borderWidth": "0.15",
@@ -170,7 +184,8 @@
     },
     "btn": {
       "content": {
-        "padding": "1",
+        "paddingTop": "1",
+        "paddingBottom": "1",
         "paddingLeft": "2.5",
         "paddingRight": "2.5",
         "backgroundColor": "rgba(0,255,255,0.15)",
@@ -256,7 +271,7 @@
         "column": 0
       },
       "end": {
-        "line": 19,
+        "line": 20,
         "column": 6
       }
     },
@@ -287,7 +302,7 @@
       },
       "end": {
         "line": 11,
-        "column": 58
+        "column": 64
       }
     },
     "uid-5": {
@@ -297,7 +312,7 @@
       },
       "end": {
         "line": 12,
-        "column": 65
+        "column": 62
       }
     },
     "uid-6": {
@@ -307,7 +322,7 @@
       },
       "end": {
         "line": 13,
-        "column": 39
+        "column": 51
       }
     },
     "uid-7": {
@@ -317,7 +332,7 @@
       },
       "end": {
         "line": 14,
-        "column": 57
+        "column": 39
       }
     },
     "uid-8": {
@@ -327,7 +342,7 @@
       },
       "end": {
         "line": 15,
-        "column": 49
+        "column": 57
       }
     },
     "uid-9": {
@@ -337,7 +352,7 @@
       },
       "end": {
         "line": 16,
-        "column": 43
+        "column": 49
       }
     },
     "uid-10": {
@@ -347,7 +362,7 @@
       },
       "end": {
         "line": 17,
-        "column": 80
+        "column": 39
       }
     },
     "uid-11": {
@@ -357,16 +372,26 @@
       },
       "end": {
         "line": 18,
-        "column": 101
+        "column": 73
       }
     },
     "uid-12": {
       "start": {
-        "line": 18,
+        "line": 19,
+        "column": 2
+      },
+      "end": {
+        "line": 19,
+        "column": 101
+      }
+    },
+    "uid-13": {
+      "start": {
+        "line": 19,
         "column": 58
       },
       "end": {
-        "line": 18,
+        "line": 19,
         "column": 92
       }
     }
