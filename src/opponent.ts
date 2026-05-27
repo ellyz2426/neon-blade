@@ -1,8 +1,9 @@
 import { Group, Mesh, MeshStandardMaterial, SphereGeometry, CapsuleGeometry, Vector3 } from '@iwsdk/core';
-import { OpponentState } from './types';
+import { OpponentState, OpponentType } from './types';
 
 export class Opponent {
   isTraining = false;
+  type: OpponentType = 'brawler';
   group = new Group();
   body: Mesh;
   head: Mesh;
@@ -20,6 +21,9 @@ export class Opponent {
   private velocity = new Vector3();
   private punchCooldown = 0;
   private moveTimer = 0;
+  private aggression = 0.5;
+  private speed = 1.0;
+  private defense = 0.4;
 
   constructor() {
     const bodyMat = new MeshStandardMaterial({ color: 0xff3366, emissive: 0xff0066, emissiveIntensity: 0.5, metalness: 0.3, roughness: 0.6 });
@@ -74,7 +78,7 @@ export class Opponent {
 
     const toTarget = this.targetPos.clone().sub(this.group.position);
     if (toTarget.length() > 0.05) {
-      toTarget.normalize().multiplyScalar(dt * 1.2);
+      toTarget.normalize().multiplyScalar(dt * 1.2 * this.speed);
       this.velocity.lerp(toTarget, 0.1);
       this.group.position.add(this.velocity);
     }
@@ -84,14 +88,14 @@ export class Opponent {
     this.group.lookAt(playerPos.x, this.group.position.y, playerPos.z);
 
     // Blocking
-    this.state.isBlocking = playerPunching && Math.random() < 0.4;
+    this.state.isBlocking = playerPunching && Math.random() < this.defense;
 
     // Punch decision
     this.punchCooldown -= dt;
     const dist = toPlayer.length();
-    if (this.punchCooldown <= 0 && dist < 1.0 && !this.state.isBlocking && Math.random() < 0.015) {
+    if (this.punchCooldown <= 0 && dist < 1.0 && !this.state.isBlocking && Math.random() < 0.015 * this.aggression) {
       this.punch();
-      this.punchCooldown = 1.0 + Math.random() * 1.0;
+      this.punchCooldown = 1.0 + Math.random() * 1.0 / Math.max(0.5, this.speed);
     }
 
     // Animate gloves
@@ -152,8 +156,41 @@ export class Opponent {
       mat.color.setHex(0x4488ff);
       mat.emissive.setHex(0x2266ff);
     } else {
-      mat.color.setHex(0xff3366);
-      mat.emissive.setHex(0xff0066);
+      this.applyTypeColors();
     }
+  }
+
+  setType(type: OpponentType) {
+    this.type = type;
+    switch (type) {
+      case 'brawler':
+        this.aggression = 0.9; this.speed = 1.0; this.defense = 0.3; this.state.maxHealth = 110; break;
+      case 'speedster':
+        this.aggression = 0.6; this.speed = 1.6; this.defense = 0.5; this.state.maxHealth = 85; break;
+      case 'tank':
+        this.aggression = 0.4; this.speed = 0.7; this.defense = 0.7; this.state.maxHealth = 150; break;
+      case 'technician':
+        this.aggression = 0.5; this.speed = 1.1; this.defense = 0.65; this.state.maxHealth = 100; break;
+    }
+    this.state.health = this.state.maxHealth;
+    this.applyTypeColors();
+  }
+
+  private applyTypeColors() {
+    const mat = this.body.material as MeshStandardMaterial;
+    const colors: Record<OpponentType, number> = {
+      brawler: 0xff3366,
+      speedster: 0x33ffaa,
+      tank: 0xffaa33,
+      technician: 0xaa33ff,
+    };
+    const emissive: Record<OpponentType, number> = {
+      brawler: 0xff0066,
+      speedster: 0x00ff88,
+      tank: 0xff8800,
+      technician: 0x8800ff,
+    };
+    mat.color.setHex(colors[this.type]);
+    mat.emissive.setHex(emissive[this.type]);
   }
 }

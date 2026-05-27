@@ -7,121 +7,79 @@
         "sourceTag": "span",
         "type": "custom",
         "children": [
-          "SWISH!"
+          "COMBO x3!"
         ],
         "properties": {
           "id": "toast-text",
-          "class": "toast-text"
+          "class": "text"
         },
         "dataUid": "uid-2"
-      },
-      {
-        "sourceTag": "span",
-        "type": "custom",
-        "children": [
-          "+3"
-        ],
-        "properties": {
-          "id": "toast-sub",
-          "class": "toast-sub"
-        },
-        "dataUid": "uid-3"
       }
     ],
     "properties": {
-      "class": "toast-panel"
+      "class": "panel"
     },
     "dataUid": "uid-1"
   },
   "classes": {
-    "toast-panel": {
+    "panel": {
       "content": {
-        "display": "flex",
-        "flexDirection": "column",
-        "alignItems": "center",
-        "paddingTop": "1",
-        "paddingBottom": "1",
-        "paddingLeft": "3",
-        "paddingRight": "3",
-        "backgroundColor": "rgba(0, 0, 0, 0.75)",
-        "borderColor": "#ff6600",
-        "borderWidth": "0.08",
+        "padding": "1.2",
+        "paddingLeft": "2",
+        "paddingRight": "2",
+        "backgroundColor": "rgba(0,0,0,0.85)",
+        "borderColor": "#ff00ff",
+        "borderWidth": "0.1",
         "borderRadius": 0.8
       }
     },
-    "toast-text": {
+    "text": {
       "content": {
-        "fontSize": "3",
-        "color": "#ff6600",
+        "fontSize": "2",
+        "color": "#ffffff",
         "fontWeight": "bold"
-      }
-    },
-    "toast-sub": {
-      "content": {
-        "fontSize": "1.4",
-        "color": "#ffaa44"
       }
     }
   },
   "ranges": {
-    "toast-panel": {
+    "panel": {
       "start": {
         "line": 1,
-        "column": 2
+        "column": 0
       },
       "end": {
         "line": 1,
-        "column": 14
+        "column": 6
       }
     },
-    "toast-text": {
+    "text": {
       "start": {
-        "line": 14,
-        "column": 2
+        "line": 2,
+        "column": 0
       },
       "end": {
-        "line": 14,
-        "column": 13
-      }
-    },
-    "toast-sub": {
-      "start": {
-        "line": 19,
-        "column": 2
-      },
-      "end": {
-        "line": 19,
-        "column": 12
+        "line": 2,
+        "column": 5
       }
     },
     "uid-1": {
       "start": {
-        "line": 24,
+        "line": 4,
         "column": 0
       },
       "end": {
-        "line": 27,
+        "line": 6,
         "column": 6
       }
     },
     "uid-2": {
       "start": {
-        "line": 25,
+        "line": 5,
         "column": 2
       },
       "end": {
-        "line": 25,
-        "column": 56
-      }
-    },
-    "uid-3": {
-      "start": {
-        "line": 26,
-        "column": 2
-      },
-      "end": {
-        "line": 26,
-        "column": 50
+        "line": 5,
+        "column": 53
       }
     }
   }

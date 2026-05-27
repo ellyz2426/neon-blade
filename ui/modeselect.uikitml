@@ -15,4 +15,12 @@
     <span class="btn-text">FIGHT</span>
     <span class="desc">3 rounds vs AI opponent</span>
   </button>
+  <button id="btn-career" class="btn" cursor="pointer">
+    <span class="btn-text">CAREER</span>
+    <span class="desc">Progress through opponents</span>
+  </button>
+  <button id="btn-tournament" class="btn" cursor="pointer">
+    <span class="btn-text">TOURNAMENT</span>
+    <span class="desc">Championship bracket</span>
+  </button>
 </div>

@@ -1,5 +1,5 @@
 import { World, PanelUI, Follower, FollowBehavior, UIKitDocument, PanelDocument, createSystem, Vector3, Mesh, SphereGeometry, MeshBasicMaterial, AdditiveBlending } from '@iwsdk/core';
-import { GameState, GameMode, GameStats, PunchType } from './types';
+import { GameState, GameMode, GameStats, PunchType, CareerProfile, Achievement, OpponentType } from './types';
 import { AudioManager } from './audio';
 import { Opponent } from './opponent';
 import { PunchDetector } from './punch';
@@ -23,6 +23,15 @@ export class BoxingGame {
   roundTime = 60;
   score = 0;
   maxCombo = 0;
+  career: CareerProfile = { level: 1, xp: 0, wins: 0, losses: 0, currentOpponent: 0, unlockedOpponents: ['brawler'] };
+  achievements: Achievement[] = [
+    { id: 'first_win', name: 'First Victory', description: 'Win your first fight', unlocked: false },
+    { id: 'combo_master', name: 'Combo Master', description: 'Land a 10-hit combo', unlocked: false },
+    { id: 'dodge_pro', name: 'Dodge Pro', description: 'Dodge 20 times in a session', unlocked: false },
+    { id: 'career_start', name: 'Rising Star', description: 'Start career mode', unlocked: false },
+  ];
+  dodgeCount = 0;
+  leaderboard: { name: string; score: number }[] = [];
 
   private hudEntity: any;
   private titleEnt: any;
@@ -45,6 +54,7 @@ export class BoxingGame {
   async init() {
     this.audio.init();
     this.world.scene.add(this.opponent.group);
+    this.loadProgress();
     await this.setupUI();
     this.setupSystems();
     this.showPanel('title');
@@ -138,7 +148,9 @@ export class BoxingGame {
     };
     bind('btn-start', () => { this.state = 'modeSelect'; this.showPanel('mode'); });
     bind('btn-training', () => { this.mode = 'training'; this.startCountdown(); });
-    bind('btn-fight', () => { this.mode = 'fight'; this.startCountdown(); });
+    bind('btn-fight', () => { this.mode = 'fight'; this.opponent.setType('brawler'); this.startCountdown(); });
+    bind('btn-career', () => { this.mode = 'career'; this.unlockAchievement('career_start'); this.startCareerFight(); });
+    bind('btn-tournament', () => { this.mode = 'tournament'; this.startTournament(); });
     bind('btn-pause', () => this.pause());
     bind('btn-resume', () => this.resume());
     bind('btn-quit', () => this.quitToTitle());
@@ -227,6 +239,8 @@ export class BoxingGame {
     if (sidestep) {
       this.dodgeCooldown = 1.0;
       this.playerStamina = Math.min(100, this.playerStamina + 10);
+      this.dodgeCount++;
+      if (this.dodgeCount >= 20) this.unlockAchievement('dodge_pro');
       this.showToast('DODGE!');
     }
 
@@ -368,9 +382,25 @@ export class BoxingGame {
     this.state = 'gameOver';
     this.showPanel('gameover');
     this.audio.playWhistle();
+    const win = this.opponent.state.health <= 0;
+    if (win) {
+      this.career.wins++;
+      this.career.xp += 50 + this.maxCombo * 5;
+      while (this.career.xp >= this.career.level * 100) {
+        this.career.xp -= this.career.level * 100;
+        this.career.level++;
+        this.showToast(`LEVEL UP ${this.career.level}!`);
+      }
+      this.unlockAchievement('first_win');
+      if (this.maxCombo >= 10) this.unlockAchievement('combo_master');
+      this.saveProgress();
+      this.updateLeaderboard();
+    } else {
+      this.career.losses++;
+      this.saveProgress();
+    }
     const doc = this.gameOverEnt?.getValue(PanelDocument, 'document') as UIKitDocument | undefined;
     if (doc) {
-      const win = this.opponent.state.health <= 0;
       const resultEl = doc.getElementById('result-text');
       if (resultEl) (resultEl as any).text.value = win ? 'YOU WIN!' : 'YOU LOSE';
       const scoreEl = doc.getElementById('score-text');
@@ -381,6 +411,57 @@ export class BoxingGame {
         (statsEl as any).text.value = `ACC ${acc}% | DMG ${Math.floor(this.stats.damageDealt)}`;
       }
     }
+  }
+
+  private startCareerFight() {
+    const opponents: OpponentType[] = ['brawler', 'speedster', 'tank', 'technician'];
+    const idx = this.career.currentOpponent % opponents.length;
+    const type = opponents[idx];
+    this.opponent.setType(type);
+    if (!this.career.unlockedOpponents.includes(type)) {
+      this.career.unlockedOpponents.push(type);
+    }
+    this.startCountdown();
+  }
+
+  private startTournament() {
+    this.opponent.setType('technician');
+    this.round = 1;
+    this.startCountdown();
+  }
+
+  private loadProgress() {
+    try {
+      const s = localStorage.getItem('neon-boxing-save');
+      if (s) {
+        const data = JSON.parse(s);
+        this.career = { ...this.career, ...data.career };
+        this.achievements = data.achievements ?? this.achievements;
+        this.leaderboard = data.leaderboard ?? [];
+      }
+    } catch {}
+  }
+
+  private saveProgress() {
+    try {
+      localStorage.setItem('neon-boxing-save', JSON.stringify({ career: this.career, achievements: this.achievements, leaderboard: this.leaderboard }));
+    } catch {}
+  }
+
+  private unlockAchievement(id: string) {
+    const a = this.achievements.find(x => x.id === id);
+    if (a && !a.unlocked) {
+      a.unlocked = true;
+      this.showToast(`ACHIEVEMENT: ${a.name}`);
+      this.saveProgress();
+    }
+  }
+
+  private updateLeaderboard() {
+    this.leaderboard.push({ name: 'You', score: this.score });
+    this.leaderboard.sort((a, b) => b.score - a.score);
+    this.leaderboard = this.leaderboard.slice(0, 10);
+    this.saveProgress();
   }
 
   pause() {

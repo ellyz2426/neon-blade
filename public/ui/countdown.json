@@ -10,8 +10,8 @@
           "3"
         ],
         "properties": {
-          "id": "cd-num",
-          "class": "countdown-num"
+          "id": "count-num",
+          "class": "num"
         },
         "dataUid": "uid-2"
       },
@@ -22,106 +22,103 @@
           "GET READY"
         ],
         "properties": {
-          "id": "cd-label",
-          "class": "countdown-label"
+          "class": "text"
         },
         "dataUid": "uid-3"
       }
     ],
     "properties": {
-      "class": "countdown-panel"
+      "class": "panel"
     },
     "dataUid": "uid-1"
   },
   "classes": {
-    "countdown-panel": {
+    "panel": {
       "content": {
         "display": "flex",
         "flexDirection": "column",
-        "alignItems": "center",
-        "paddingTop": "2",
-        "paddingBottom": "2",
-        "paddingLeft": "4",
-        "paddingRight": "4",
-        "backgroundColor": "rgba(0, 0, 0, 0.8)",
-        "borderColor": "#ff6600",
-        "borderWidth": "0.1",
-        "borderRadius": 1
+        "padding": "3",
+        "backgroundColor": "rgba(0,0,0,0.9)",
+        "borderColor": "#ffff00",
+        "borderWidth": "0.2",
+        "borderRadius": 1,
+        "alignItems": "center"
       }
     },
-    "countdown-num": {
+    "num": {
       "content": {
         "fontSize": "8",
-        "color": "#ff6600",
+        "color": "#ffff00",
         "fontWeight": "bold"
       }
     },
-    "countdown-label": {
+    "text": {
       "content": {
-        "fontSize": "1.5",
-        "color": "#ffaa44"
+        "fontSize": "2.5",
+        "color": "#ffffff",
+        "marginTop": "1"
       }
     }
   },
   "ranges": {
-    "countdown-panel": {
+    "panel": {
       "start": {
         "line": 1,
-        "column": 2
+        "column": 0
       },
       "end": {
         "line": 1,
-        "column": 18
+        "column": 6
       }
     },
-    "countdown-num": {
+    "num": {
       "start": {
-        "line": 14,
-        "column": 2
+        "line": 2,
+        "column": 0
       },
       "end": {
-        "line": 14,
-        "column": 16
+        "line": 2,
+        "column": 4
       }
     },
-    "countdown-label": {
+    "text": {
       "start": {
-        "line": 19,
-        "column": 2
+        "line": 3,
+        "column": 0
       },
       "end": {
-        "line": 19,
-        "column": 18
+        "line": 3,
+        "column": 5
       }
     },
     "uid-1": {
       "start": {
-        "line": 24,
+        "line": 5,
         "column": 0
       },
       "end": {
-        "line": 27,
+        "line": 8,
         "column": 6
       }
     },
     "uid-2": {
       "start": {
-        "line": 25,
+        "line": 6,
         "column": 2
       },
       "end": {
-        "line": 25,
-        "column": 50
+        "line": 6,
+        "column": 43
       }
     },
     "uid-3": {
       "start": {
-        "line": 26,
+        "line": 7,
         "column": 2
       },
       "end": {
-        "line": 26,
-        "column": 62
+        "line": 7,
+        "column": 37
       }
     }
   }
