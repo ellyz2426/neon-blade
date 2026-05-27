@@ -11,4 +11,16 @@
   <button id="start-btn" class="btn" cursor="pointer">
     <span class="btn-text">START</span>
   </button>
+  <button id="daily-btn" class="btn" cursor="pointer">
+    <span class="btn-text">DAILY CHALLENGE</span>
+  </button>
+  <button id="ach-btn" class="btn" cursor="pointer">
+    <span class="btn-text">ACHIEVEMENTS</span>
+  </button>
+  <button id="help-btn" class="btn" cursor="pointer">
+    <span class="btn-text">HELP</span>
+  </button>
+  <button id="settings-btn" class="btn" cursor="pointer">
+    <span class="btn-text">SETTINGS</span>
+  </button>
 </div>

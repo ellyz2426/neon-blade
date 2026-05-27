@@ -46,6 +46,10 @@ let volMaster = 0.6;
 let volSfx = 0.8;
 let volMusic = 0.3;
 
+let dailySeed = 0;
+let spectatorAngle = 0;
+let unlockedThemes = new Set<string>(['cyan']);
+
 function loadProgress() {
   try {
     const saved = localStorage.getItem('neon-blade-progress');
@@ -58,13 +62,14 @@ function loadProgress() {
       volSfx = p.volSfx ?? volSfx;
       volMusic = p.volMusic ?? volMusic;
       state.difficulty = p.difficulty ?? state.difficulty;
+      if (Array.isArray(p.unlockedThemes)) unlockedThemes = new Set(p.unlockedThemes);
     }
   } catch {}
 }
 
 function saveProgress() {
   try {
-    localStorage.setItem('neon-blade-progress', JSON.stringify({ themeIndex, duelWins, achievements, volMaster, volSfx, volMusic, difficulty: state.difficulty }));
+    localStorage.setItem('neon-blade-progress', JSON.stringify({ themeIndex, duelWins, achievements, volMaster, volSfx, volMusic, difficulty: state.difficulty, unlockedThemes: Array.from(unlockedThemes) }));
   } catch {}
 }
 
@@ -114,6 +119,26 @@ function bindUI() {
       (startBtn as any)._bound = true;
       startBtn.addEventListener('click', () => { ui.hide('title'); ui.show('modeselect'); });
     }
+    const dailyBtn = titleDoc?.getElementById('daily-btn');
+    if (dailyBtn && !(dailyBtn as any)._bound) {
+      (dailyBtn as any)._bound = true;
+      dailyBtn.addEventListener('click', () => startDailyChallenge());
+    }
+    const achBtn = titleDoc?.getElementById('ach-btn');
+    if (achBtn && !(achBtn as any)._bound) {
+      (achBtn as any)._bound = true;
+      achBtn.addEventListener('click', () => { ui.hideAll(); ui.show('achievements'); ui.populateAchievements(achievements.map(a=>({name:a.name, unlocked:a.unlocked, desc:a.desc}))); });
+    }
+    const helpBtn = titleDoc?.getElementById('help-btn');
+    if (helpBtn && !(helpBtn as any)._bound) {
+      (helpBtn as any)._bound = true;
+      helpBtn.addEventListener('click', () => { ui.hideAll(); ui.show('help'); });
+    }
+    const settingsBtn = titleDoc?.getElementById('settings-btn');
+    if (settingsBtn && !(settingsBtn as any)._bound) {
+      (settingsBtn as any)._bound = true;
+      settingsBtn.addEventListener('click', () => { ui.hideAll(); ui.show('settings'); });
+    }
     // Mode select
     const modeDoc = ui.getDoc('modeselect');
     const bindMode = (id:string, mode:GameMode) => {
@@ -159,6 +184,10 @@ function bindUI() {
     const lbDoc = ui.getDoc('leaderboard');
     const lbBack = lbDoc?.getElementById('back-btn');
     if (lbBack && !(lbBack as any)._bound) { (lbBack as any)._bound = true; lbBack.addEventListener('click', ()=> { ui.hide('leaderboard'); ui.show('title'); }); }
+    // Achievements back
+    const achDoc = ui.getDoc('achievements');
+    const achBack = achDoc?.getElementById('ach-back');
+    if (achBack && !(achBack as any)._bound) { (achBack as any)._bound = true; achBack.addEventListener('click', ()=> { ui.hide('achievements'); ui.show('title'); }); }
     // Update displays
     updateSettingsUI();
     ui.populateLeaderboard(loadLeaderboard());
@@ -185,6 +214,20 @@ function showTitle() {
   state.running = false;
   state.paused = false;
   ui.populateLeaderboard(loadLeaderboard());
+  dailySeed = Math.floor(Date.now() / 86400000);
+}
+
+function startDailyChallenge() {
+  // Seeded daily: hard difficulty, survival with modifiers
+  const seed = dailySeed;
+  const modes: GameMode[] = ['duel','survival','timeattack'];
+  const mode = modes[seed % modes.length];
+  state.difficulty = 'hard';
+  ai.setDifficulty('hard');
+  startGame(mode);
+  // Apply seeded modifier: reduce player health
+  state.playerHealth = 70;
+  ui.showToast(`Daily Challenge: ${mode.toUpperCase()} (Seed ${seed})`, 3000);
 }
 
 function startGame(mode: GameMode) {
@@ -265,7 +308,18 @@ function endGame(win: boolean) {
   if (win && state.difficulty === 'hard') unlock('hard_win');
   const duration = (performance.now() - startTime)/1000;
   if (win && duration < 30) unlock('speed_kill');
-  if (win) { duelWins++; if (duelWins >= 10) unlock('duel_10'); saveProgress(); }
+  if (win) {
+    duelWins++;
+    if (duelWins >= 10) unlock('duel_10');
+    // Unlock blade themes every 3 wins
+    const themeToUnlock = BLADE_THEMES[Math.min(BLADE_THEMES.length-1, Math.floor(duelWins/3))];
+    if (themeToUnlock && !unlockedThemes.has(themeToUnlock.id)) {
+      unlockedThemes.add(themeToUnlock.id);
+      ui.showToast(`Blade Unlocked: ${themeToUnlock.name}`);
+    }
+    if (unlockedThemes.size >= BLADE_THEMES.length) unlock('theme_collector');
+    saveProgress();
+  }
   if (state.score > 0) {
     const lb = loadLeaderboard();
     lb.push({ name: 'YOU', score: state.score });
@@ -280,6 +334,10 @@ function loop() {
   const dt = Math.min(0.05, (now - lastTime)/1000);
   lastTime = now;
   if (arena) arena.update(dt);
+  if (world && !state.running) {
+    spectatorAngle += dt * 0.2;
+    world.scene.rotation.y = Math.sin(spectatorAngle) * 0.05;
+  }
   if (world && state.running && !state.paused) {
     const right = world.input.xr.gamepads.right;
     const trigger = right?.getButtonDown(InputComponent.Trigger) ?? false;

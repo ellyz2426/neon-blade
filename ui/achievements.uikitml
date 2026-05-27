@@ -1,0 +1,23 @@
+<style>
+.panel { display: flex; flex-direction: column; padding: 3; background-color: rgba(0,0,0,0.85); border-color: #00ffff; border-width: 0.15; border-radius: 1; width: 70; }
+.title { font-size: 4; color: #00ffff; font-weight: bold; margin-bottom: 2; text-align: center; }
+.row { display: flex; flex-direction: row; justify-content: space-between; padding-top: 0.8; padding-bottom: 0.8; }
+.name { font-size: 2; color: #ffffff; }
+.desc { font-size: 1.5; color: #a0a0a0; }
+.locked { color: #555555; }
+.unlocked { color: #00ffaa; }
+.btn { padding: 1.5; background-color: rgba(0,255,255,0.2); border-color: #00ffff; border-width: 0.1; border-radius: 0.8; margin-top: 2; cursor: pointer; align-items: center; }
+.btn-text { font-size: 2.2; color: #ffffff; font-weight: bold; }
+</style>
+<div class="panel">
+  <span class="title">ACHIEVEMENTS</span>
+  <div class="row"><span id="ach-name-0" class="name locked">---</span><span id="ach-stat-0" class="desc">Locked</span></div>
+  <div class="row"><span id="ach-name-1" class="name locked">---</span><span id="ach-stat-1" class="desc">Locked</span></div>
+  <div class="row"><span id="ach-name-2" class="name locked">---</span><span id="ach-stat-2" class="desc">Locked</span></div>
+  <div class="row"><span id="ach-name-3" class="name locked">---</span><span id="ach-stat-3" class="desc">Locked</span></div>
+  <div class="row"><span id="ach-name-4" class="name locked">---</span><span id="ach-stat-4" class="desc">Locked</span></div>
+  <div class="row"><span id="ach-name-5" class="name locked">---</span><span id="ach-stat-5" class="desc">Locked</span></div>
+  <div class="row"><span id="ach-name-6" class="name locked">---</span><span id="ach-stat-6" class="desc">Locked</span></div>
+  <div class="row"><span id="ach-name-7" class="name locked">---</span><span id="ach-stat-7" class="desc">Locked</span></div>
+  <button id="ach-back" class="btn" cursor="pointer"><span class="btn-text">BACK</span></button>
+</div>

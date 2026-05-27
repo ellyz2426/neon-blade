@@ -19,6 +19,7 @@ export class UIManager {
     await this.createPanel('help', '/ui/help.json', [0, 1.6, -2], false);
     await this.createPanel('countdown', '/ui/countdown.json', [0, 1.8, -2], false);
     await this.createPanel('leaderboard', '/ui/leaderboard.json', [0, 1.6, -2], false);
+    await this.createPanel('achievements', '/ui/achievements.json', [0, 1.6, -2], false);
     await this.createHUD();
     await this.createToast();
     this.hideAll();
@@ -102,6 +103,15 @@ export class UIManager {
       const score = entries[i]?.score != null ? `${entries[i].score}` : '-----';
       this.setText('leaderboard', `lb-name-${i+1}`, name);
       this.setText('leaderboard', `lb-score-${i+1}`, score);
+    }
+  }
+
+  populateAchievements(achs: Array<{name:string, unlocked:boolean, desc:string}>) {
+    for (let i = 0; i < 8; i++) {
+      const a = achs[i];
+      if (!a) continue;
+      this.setText('achievements', `ach-name-${i}`, `${a.unlocked ? '✓ ' : '✗ '}${a.name}`);
+      this.setText('achievements', `ach-stat-${i}`, a.unlocked ? 'Unlocked' : a.desc);
     }
   }
 
