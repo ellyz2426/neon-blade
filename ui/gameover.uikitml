@@ -1,0 +1,16 @@
+<style>
+.panel { display: flex; flex-direction: column; padding: 3; background-color: rgba(0,0,0,0.9); border-color: #ff00ff; border-width: 0.15; border-radius: 1; align-items: center; }
+.title { font-size: 4.5; color: #ff00ff; font-weight: bold; margin-bottom: 1; }
+.subtitle { font-size: 2; color: #00ffff; margin-bottom: 2; }
+.stat { font-size: 1.6; color: #ffffff; margin-top: 0.5; }
+.btn { padding: 1.2; padding-left: 3; padding-right: 3; background-color: rgba(255,0,255,0.2); border-color: #ff00ff; border-width: 0.1; border-radius: 0.8; margin-top: 2; cursor: pointer; }
+.btn-text { font-size: 2.2; color: #ffffff; }
+</style>
+<div class="panel">
+  <span class="title">FIGHT OVER</span>
+  <span id="result-text" class="subtitle">YOU WIN</span>
+  <span id="score-text" class="stat">SCORE: 0</span>
+  <span id="stats-text" class="stat">PUNCHES: 0/0</span>
+  <button id="btn-rematch" class="btn" cursor="pointer"><span class="btn-text">REMATCH</span></button>
+  <button id="btn-title" class="btn" cursor="pointer"><span class="btn-text">TITLE</span></button>
+</div>

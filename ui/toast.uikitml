@@ -1,0 +1,7 @@
+<style>
+.panel { padding: 1.2; padding-left: 2; padding-right: 2; background-color: rgba(0,0,0,0.85); border-color: #ff00ff; border-width: 0.1; border-radius: 0.8; }
+.text { font-size: 2; color: #ffffff; font-weight: bold; }
+</style>
+<div class="panel">
+  <span id="toast-text" class="text">COMBO x3!</span>
+</div>

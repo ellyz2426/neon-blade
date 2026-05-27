@@ -1,0 +1,16 @@
+<style>
+.panel { display: flex; flex-direction: column; padding: 2.5; background-color: rgba(0,0,0,0.85); border-color: #00ff00; border-width: 0.15; border-radius: 1; align-items: center; }
+.title { font-size: 3.5; color: #00ff00; font-weight: bold; margin-bottom: 1.5; }
+.row { display: flex; flex-direction: row; justify-content: space-between; width: 100%; margin-top: 1; }
+.label { font-size: 1.8; color: #ffffff; }
+.value { font-size: 1.8; color: #00ff00; }
+.btn { padding: 1; padding-left: 2.5; padding-right: 2.5; background-color: rgba(0,255,0,0.15); border-color: #00ff00; border-width: 0.1; border-radius: 0.7; margin-top: 2; cursor: pointer; }
+.btn-text { font-size: 2; color: #ffffff; }
+</style>
+<div class="panel">
+  <span class="title">SETTINGS</span>
+  <div class="row"><span class="label">MASTER VOL</span><span class="value">60%</span></div>
+  <div class="row"><span class="label">SFX VOL</span><span class="value">80%</span></div>
+  <div class="row"><span class="label">MUSIC VOL</span><span class="value">30%</span></div>
+  <button id="btn-back" class="btn" cursor="pointer"><span class="btn-text">BACK</span></button>
+</div>
