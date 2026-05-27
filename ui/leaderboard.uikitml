@@ -10,8 +10,10 @@
 </style>
 <div class="panel">
   <span class="title">LEADERBOARD</span>
-  <div class="row"><span class="rank">#1</span><span class="name">---</span><span class="score">-----</span></div>
-  <div class="row"><span class="rank">#2</span><span class="name">---</span><span class="score">-----</span></div>
-  <div class="row"><span class="rank">#3</span><span class="name">---</span><span class="score">-----</span></div>
+  <div class="row"><span class="rank">#1</span><span id="lb-name-1" class="name">---</span><span id="lb-score-1" class="score">-----</span></div>
+  <div class="row"><span class="rank">#2</span><span id="lb-name-2" class="name">---</span><span id="lb-score-2" class="score">-----</span></div>
+  <div class="row"><span class="rank">#3</span><span id="lb-name-3" class="name">---</span><span id="lb-score-3" class="score">-----</span></div>
+  <div class="row"><span class="rank">#4</span><span id="lb-name-4" class="name">---</span><span id="lb-score-4" class="score">-----</span></div>
+  <div class="row"><span class="rank">#5</span><span id="lb-name-5" class="name">---</span><span id="lb-score-5" class="score">-----</span></div>
   <button id="back-btn" class="btn" cursor="pointer"><span class="btn-text">BACK</span></button>
 </div>

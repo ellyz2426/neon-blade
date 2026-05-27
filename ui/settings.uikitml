@@ -1,16 +1,19 @@
 <style>
-.panel { display: flex; flex-direction: column; padding-top: 2.5; padding-bottom: 2.5; padding-left: 2.5; padding-right: 2.5; background-color: rgba(0,0,0,0.85); border-color: #00ff00; border-width: 0.15; border-radius: 1; align-items: center; }
+.panel { display: flex; flex-direction: column; padding-top: 2.5; padding-bottom: 2.5; padding-left: 2.5; padding-right: 2.5; background-color: rgba(0,0,0,0.85); border-color: #00ff00; border-width: 0.15; border-radius: 1; align-items: center; width: 55vw; }
 .title { font-size: 3.5; color: #00ff00; font-weight: bold; margin-bottom: 1.5; }
-.row { display: flex; flex-direction: row; justify-content: space-between; width: 100%; margin-top: 1; }
+.row { display: flex; flex-direction: row; justify-content: space-between; align-items: center; width: 100%; margin-top: 1; }
 .label { font-size: 1.8; color: #ffffff; }
-.value { font-size: 1.8; color: #00ff00; }
+.value { font-size: 1.8; color: #00ff00; min-width: 6; text-align: right; }
+.btn-small { padding-top: 0.4; padding-bottom: 0.4; padding-left: 1.2; padding-right: 1.2; background-color: rgba(0,255,0,0.2); border-color: #00ff00; border-width: 0.08; border-radius: 0.5; margin-left: 0.8; cursor: pointer; }
+.btn-text-small { font-size: 1.6; color: #ffffff; }
 .btn { padding-top: 1; padding-bottom: 1; padding-left: 2.5; padding-right: 2.5; background-color: rgba(0,255,0,0.15); border-color: #00ff00; border-width: 0.1; border-radius: 0.7; margin-top: 2; cursor: pointer; }
 .btn-text { font-size: 2; color: #ffffff; }
 </style>
 <div class="panel">
   <span class="title">SETTINGS</span>
-  <div class="row"><span class="label">MASTER VOL</span><span class="value">60%</span></div>
-  <div class="row"><span class="label">SFX VOL</span><span class="value">80%</span></div>
-  <div class="row"><span class="label">MUSIC VOL</span><span class="value">30%</span></div>
+  <div class="row"><span class="label">MASTER VOL</span><div style="display:flex;flex-direction:row;align-items:center;"><span id="val-master" class="value">60%</span><button id="master-down" class="btn-small" cursor="pointer"><span class="btn-text-small">-</span></button><button id="master-up" class="btn-small" cursor="pointer"><span class="btn-text-small">+</span></button></div></div>
+  <div class="row"><span class="label">SFX VOL</span><div style="display:flex;flex-direction:row;align-items:center;"><span id="val-sfx" class="value">80%</span><button id="sfx-down" class="btn-small" cursor="pointer"><span class="btn-text-small">-</span></button><button id="sfx-up" class="btn-small" cursor="pointer"><span class="btn-text-small">+</span></button></div></div>
+  <div class="row"><span class="label">MUSIC VOL</span><div style="display:flex;flex-direction:row;align-items:center;"><span id="val-music" class="value">30%</span><button id="music-down" class="btn-small" cursor="pointer"><span class="btn-text-small">-</span></button><button id="music-up" class="btn-small" cursor="pointer"><span class="btn-text-small">+</span></button></div></div>
+  <div class="row"><span class="label">DIFFICULTY</span><div style="display:flex;flex-direction:row;align-items:center;"><span id="val-diff" class="value">MEDIUM</span><button id="diff-prev" class="btn-small" cursor="pointer"><span class="btn-text-small">&lt;</span></button><button id="diff-next" class="btn-small" cursor="pointer"><span class="btn-text-small">&gt;</span></button></div></div>
   <button id="btn-back" class="btn" cursor="pointer"><span class="btn-text">BACK</span></button>
 </div>

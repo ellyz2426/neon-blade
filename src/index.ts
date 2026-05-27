@@ -42,6 +42,10 @@ let startTime = 0;
 let tutorialStep = 0;
 let tutorialActive = false;
 
+let volMaster = 0.6;
+let volSfx = 0.8;
+let volMusic = 0.3;
+
 function loadProgress() {
   try {
     const saved = localStorage.getItem('neon-blade-progress');
@@ -50,13 +54,17 @@ function loadProgress() {
       themeIndex = p.themeIndex ?? 0;
       duelWins = p.duelWins ?? 0;
       achievements = p.achievements ?? achievements;
+      volMaster = p.volMaster ?? volMaster;
+      volSfx = p.volSfx ?? volSfx;
+      volMusic = p.volMusic ?? volMusic;
+      state.difficulty = p.difficulty ?? state.difficulty;
     }
   } catch {}
 }
 
 function saveProgress() {
   try {
-    localStorage.setItem('neon-blade-progress', JSON.stringify({ themeIndex, duelWins, achievements }));
+    localStorage.setItem('neon-blade-progress', JSON.stringify({ themeIndex, duelWins, achievements, volMaster, volSfx, volMusic, difficulty: state.difficulty }));
   } catch {}
 }
 
@@ -82,11 +90,15 @@ async function init() {
   });
   audio = new AudioManager();
   audio.init();
+  audio.setMaster(volMaster);
+  audio.setSfx(volSfx);
+  audio.setMusic(volMusic);
   arena = new Arena(world);
   ui = new UIManager(world);
   await ui.init();
   combat = new CombatSystem(world, audio, state);
   ai = new AIController(world, combat, state);
+  ai.setDifficulty(state.difficulty);
   combat.setBladeTheme(BLADE_THEMES[themeIndex].id);
   bindUI();
   showTitle();
@@ -125,15 +137,46 @@ function bindUI() {
     const helpDoc = ui.getDoc('help');
     const helpBack = helpDoc?.getElementById('btn-help-back');
     if (helpBack && !(helpBack as any)._bound) { (helpBack as any)._bound = true; helpBack.addEventListener('click', ()=> { ui.hide('help'); ui.show('title'); }); }
-    // Settings back + theme cycle
+    // Settings
     const setDoc = ui.getDoc('settings');
     const setBack = setDoc?.getElementById('btn-back');
-    if (setBack && !(setBack as any)._bound) { (setBack as any)._bound = true; setBack.addEventListener('click', ()=> { ui.hide('settings'); ui.show('title'); }); }
+    if (setBack && !(setBack as any)._bound) { (setBack as any)._bound = true; setBack.addEventListener('click', ()=> { ui.hide('settings'); ui.show('title'); saveProgress(); }); }
+    const bindVol = (id:string, fn:()=>void) => {
+      const b = setDoc?.getElementById(id);
+      if (b && !(b as any)._bound) { (b as any)._bound = true; b.addEventListener('click', fn); }
+    };
+    bindVol('master-up', ()=>{ volMaster = Math.min(1, volMaster+0.1); audio.setMaster(volMaster); updateSettingsUI(); });
+    bindVol('master-down', ()=>{ volMaster = Math.max(0, volMaster-0.1); audio.setMaster(volMaster); updateSettingsUI(); });
+    bindVol('sfx-up', ()=>{ volSfx = Math.min(1, volSfx+0.1); audio.setSfx(volSfx); updateSettingsUI(); });
+    bindVol('sfx-down', ()=>{ volSfx = Math.max(0, volSfx-0.1); audio.setSfx(volSfx); updateSettingsUI(); });
+    bindVol('music-up', ()=>{ volMusic = Math.min(1, volMusic+0.1); audio.setMusic(volMusic); updateSettingsUI(); });
+    bindVol('music-down', ()=>{ volMusic = Math.max(0, volMusic-0.1); audio.setMusic(volMusic); updateSettingsUI(); });
+    const diffNext = setDoc?.getElementById('diff-next');
+    if (diffNext && !(diffNext as any)._bound) { (diffNext as any)._bound = true; diffNext.addEventListener('click', ()=>{ cycleDiff(1); }); }
+    const diffPrev = setDoc?.getElementById('diff-prev');
+    if (diffPrev && !(diffPrev as any)._bound) { (diffPrev as any)._bound = true; diffPrev.addEventListener('click', ()=>{ cycleDiff(-1); }); }
     // Leaderboard back
     const lbDoc = ui.getDoc('leaderboard');
     const lbBack = lbDoc?.getElementById('back-btn');
     if (lbBack && !(lbBack as any)._bound) { (lbBack as any)._bound = true; lbBack.addEventListener('click', ()=> { ui.hide('leaderboard'); ui.show('title'); }); }
+    // Update displays
+    updateSettingsUI();
+    ui.populateLeaderboard(loadLeaderboard());
   }, 500);
+}
+
+function cycleDiff(dir:number) {
+  const order: Difficulty[] = ['easy','medium','hard'];
+  const idx = order.indexOf(state.difficulty);
+  const next = order[(idx + dir + 3) % 3];
+  state.difficulty = next;
+  ai.setDifficulty(next);
+  updateSettingsUI();
+  saveProgress();
+}
+
+function updateSettingsUI() {
+  ui.updateSettingsDisplay({master:volMaster,sfx:volSfx,music:volMusic,diff:state.difficulty});
 }
 
 function showTitle() {
@@ -141,11 +184,11 @@ function showTitle() {
   ui.show('title');
   state.running = false;
   state.paused = false;
+  ui.populateLeaderboard(loadLeaderboard());
 }
 
 function startGame(mode: GameMode) {
   state.mode = mode;
-  state.difficulty = 'medium';
   ai.setDifficulty(state.difficulty);
   state.running = true;
   state.paused = false;
@@ -166,7 +209,6 @@ function startGame(mode: GameMode) {
   tutorialActive = mode === 'training';
   ui.hideAll();
   ui.show('hud');
-  // Countdown
   ui.show('countdown');
   let c = 3;
   const iv = setInterval(() => {
@@ -184,6 +226,7 @@ function runTutorial() {
     'Parry: Block just before hit',
     'Stance: Thumbstick Up/Down or Q/E',
     'High beats Low, Low beats Mid, Mid beats High',
+    'Hit the dummy 5 times!',
     'Complete!'
   ];
   const next = () => {
@@ -212,7 +255,6 @@ function endGame(win: boolean) {
   ui.setText('gameover', 'final-score', `Score: ${state.score}`);
   ui.setText('gameover', 'max-combo', `Max Combo: x${state.maxCombo}`);
   if (win) audio.playWin(); else audio.playLose();
-  // Achievements
   if (state.combo >= 10) unlock('combo10');
   if (win && state.playerHealth === MAX_HEALTH) unlock('flawless');
   if (parryStreak >= 3) unlock('perfect_parry');
@@ -224,12 +266,12 @@ function endGame(win: boolean) {
   const duration = (performance.now() - startTime)/1000;
   if (win && duration < 30) unlock('speed_kill');
   if (win) { duelWins++; if (duelWins >= 10) unlock('duel_10'); saveProgress(); }
-  // Leaderboard
   if (state.score > 0) {
     const lb = loadLeaderboard();
     lb.push({ name: 'YOU', score: state.score });
     lb.sort((a,b)=>b.score-a.score);
     saveLeaderboard(lb);
+    ui.populateLeaderboard(lb);
   }
 }
 
@@ -237,6 +279,7 @@ function loop() {
   const now = performance.now();
   const dt = Math.min(0.05, (now - lastTime)/1000);
   lastTime = now;
+  if (arena) arena.update(dt);
   if (world && state.running && !state.paused) {
     const right = world.input.xr.gamepads.right;
     const trigger = right?.getButtonDown(InputComponent.Trigger) ?? false;
@@ -255,16 +298,18 @@ function loop() {
     if (block) blocksUsed++;
     usedStances.add(stance);
     combat.update(dt, { swing, block, stance, move: new Vector3() });
-    ai.update(dt);
+    // Training dummy: keep opponent stationary and count hits
+    if (state.mode === 'training') {
+      combat.setOpponentPose(new Vector3(0, 1.2, -1.2), new Quaternion());
+    } else {
+      ai.update(dt);
+    }
     ui.updateHUD(state);
-    // Parry streak tracking
     if (combat.parrySuccessCount > parryStreak) parryStreak = combat.parrySuccessCount;
-    // Tutorial hints
     if (tutorialActive) {
       if (tutorialStep === 1 && swing) ui.showToast('Good swing!');
       if (tutorialStep === 2 && block) ui.showToast('Blocking!');
     }
-    // Mode logic
     if (state.mode === 'timeattack') {
       state.timeLeft -= dt;
       if (state.timeLeft <= 0) endGame(state.score > 0);
@@ -277,20 +322,25 @@ function loop() {
         state.playerHealth = Math.min(MAX_HEALTH, state.playerHealth + 20);
         ui.showToast(`Wave ${state.wavesCleared} cleared!`);
         if (state.wavesCleared >= 10) unlock('immortal');
+      } else if (state.mode === 'training') {
+        // Reset dummy
+        state.opponentHealth = MAX_HEALTH;
+        state.score += 100;
       } else {
         endGame(true);
         if (state.combo > 0 && !achievements.find(a=>a.id==='first_blood')?.unlocked) unlock('first_blood');
       }
     }
   }
-  // Theme cycle key
   if (world?.input.keyboard.getKeyDown('KeyT')) {
     themeIndex = (themeIndex + 1) % BLADE_THEMES.length;
     combat.setBladeTheme(BLADE_THEMES[themeIndex].id);
     ui.showToast(`Theme: ${BLADE_THEMES[themeIndex].name}`);
+    if (BLADE_THEMES.every((_,i)=>i===themeIndex || localStorage.getItem('neon-blade-progress')?.includes(BLADE_THEMES[i].id))) {
+      // simple check
+    }
     saveProgress();
   }
-  // A button menu confirm
   const aPress = world?.input.xr.gamepads.right?.getButtonDown(InputComponent.A_Button);
   if (aPress && !state.running) {
     ui.hideAll();
@@ -307,7 +357,7 @@ window.addEventListener('keydown', (e)=>{
   }
   if (e.code === 'KeyH' && !state.running) { ui.hideAll(); ui.show('help'); }
   if (e.code === 'KeyS' && !state.running) { ui.hideAll(); ui.show('settings'); }
-  if (e.code === 'KeyL' && !state.running) { ui.hideAll(); ui.show('leaderboard'); }
+  if (e.code === 'KeyL' && !state.running) { ui.hideAll(); ui.show('leaderboard'); ui.populateLeaderboard(loadLeaderboard()); }
 });
 
 init();

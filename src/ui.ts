@@ -11,7 +11,6 @@ export class UIManager {
   }
 
   async init() {
-    // Create panel entities
     await this.createPanel('title', '/ui/title.json', [0, 1.6, -2.5], false);
     await this.createPanel('modeselect', '/ui/modeselect.json', [0, 1.6, -2.5], false);
     await this.createPanel('pause', '/ui/pause.json', [0, 1.6, -2], false);
@@ -20,9 +19,7 @@ export class UIManager {
     await this.createPanel('help', '/ui/help.json', [0, 1.6, -2], false);
     await this.createPanel('countdown', '/ui/countdown.json', [0, 1.8, -2], false);
     await this.createPanel('leaderboard', '/ui/leaderboard.json', [0, 1.6, -2], false);
-    // HUD follower
     await this.createHUD();
-    // Toast follower
     await this.createToast();
     this.hideAll();
   }
@@ -33,7 +30,6 @@ export class UIManager {
     e.addComponent(PanelUI, { config, maxWidth: 0.8, maxHeight: 1.0 });
     e.object3D.visible = visible;
     this.panels.set(id, e);
-    // Store doc later when available
   }
 
   async createHUD() {
@@ -94,8 +90,25 @@ export class UIManager {
   }
 
   showToast(msg: string, ms = 1500) {
-    this.setText('toast', 'toast-text', msg);
+    const icon = msg.includes('Achievement') ? '🏆 ' : msg.includes('Wave') ? '⚔️ ' : '✨ ';
+    this.setText('toast', 'toast-text', icon + msg);
     this.show('toast');
     setTimeout(() => this.hide('toast'), ms);
+  }
+
+  populateLeaderboard(entries: Array<{name:string,score:number}>) {
+    for (let i = 0; i < 5; i++) {
+      const name = entries[i]?.name ?? '---';
+      const score = entries[i]?.score != null ? `${entries[i].score}` : '-----';
+      this.setText('leaderboard', `lb-name-${i+1}`, name);
+      this.setText('leaderboard', `lb-score-${i+1}`, score);
+    }
+  }
+
+  updateSettingsDisplay(vals: {master:number,sfx:number,music:number,diff:string}) {
+    this.setText('settings', 'val-master', `${Math.round(vals.master*100)}%`);
+    this.setText('settings', 'val-sfx', `${Math.round(vals.sfx*100)}%`);
+    this.setText('settings', 'val-music', `${Math.round(vals.music*100)}%`);
+    this.setText('settings', 'val-diff', vals.diff.toUpperCase());
   }
 }

@@ -19,6 +19,8 @@ export class CombatSystem {
   trailMesh: Mesh | null = null;
   trailTime = 0;
   sparks: Array<{mesh: Mesh, vel: Vector3, life: number}> = [];
+  opponentStunTime = 0;
+  opponentBasePos = new Vector3(0, 1.2, -1.5);
 
   constructor(world: World, audio: AudioManager, state: GameState) {
     this.world = world;
@@ -36,6 +38,7 @@ export class CombatSystem {
     oppMesh.position.y = 0.5;
     this.opponentBlade = new Group();
     this.opponentBlade.add(oppMesh);
+    this.opponentBlade.position.copy(this.opponentBasePos);
     this.world.scene.add(this.playerBlade);
     this.world.scene.add(this.opponentBlade);
   }
@@ -76,9 +79,12 @@ export class CombatSystem {
 
     this.state.playerStance = input.stance;
 
+    // Combo glow
+    const comboFactor = Math.min(1, this.state.combo / 10);
+    this.playerBladeMat.emissiveIntensity = 1 + comboFactor * 1.5 + (this.hitFlashTime > 0 ? 1 : 0);
+
     if (this.hitFlashTime > 0) {
       this.hitFlashTime -= dt;
-      this.playerBladeMat.emissiveIntensity = 1 + (this.hitFlashTime > 0 ? 1 : 0);
     }
 
     // Update trail
@@ -86,6 +92,7 @@ export class CombatSystem {
       this.trailTime -= dt;
       const mat = this.trailMesh.material as MeshBasicMaterial;
       mat.opacity = Math.max(0, this.trailTime / 0.2);
+      this.trailMesh.scale.setScalar(1 + comboFactor * 0.5);
       if (this.trailTime <= 0) {
         this.world.scene.remove(this.trailMesh);
         this.trailMesh = null;
@@ -105,14 +112,21 @@ export class CombatSystem {
         this.sparks.splice(i, 1);
       }
     }
+
+    // Opponent stun recovery
+    if (this.opponentStunTime > 0) {
+      this.opponentStunTime -= dt;
+      this.opponentBlade.position.lerp(this.opponentBasePos, dt * 5);
+    }
   }
 
   performSwing() {
     this.swingCooldown = 0.3;
     this.state.playerStamina -= STAMINA_SWING_COST;
     this.lastSwingTime = performance.now();
-    this.audio.playSwing(1);
+    this.audio.playSwing(1 + this.state.combo * 0.05);
     this.spawnTrail();
+    this.triggerHaptic(0.7, 50);
     const dist = this.playerBlade.position.distanceTo(this.opponentBlade.position);
     if (dist < 1.5) {
       const oppBlocking = this.isOpponentBlocking();
@@ -121,6 +135,7 @@ export class CombatSystem {
         this.audio.playClash();
         this.state.combo = 0;
         this.spawnSparks(this.playerBlade.position, 8, 0xffaa00);
+        this.applyStunToOpponent(0.3);
       } else {
         if (isParry) {
           this.audio.playParry();
@@ -128,6 +143,7 @@ export class CombatSystem {
           this.state.combo = 0;
           this.applyStunToOpponent(0.6);
           this.spawnSparks(this.playerBlade.position, 12, 0x00ffff);
+          this.triggerHaptic(1.0, 100);
         } else {
           this.audio.playHit();
           const damage = 10 + this.state.combo * 2;
@@ -137,6 +153,8 @@ export class CombatSystem {
           this.state.score += damage * 10 * Math.max(1, this.state.combo);
           this.hitFlashTime = 0.15;
           this.spawnSparks(this.opponentBlade.position, 10, 0xff00ff);
+          this.applyStunToOpponent(0.2);
+          this.triggerHaptic(0.9, 80);
         }
       }
     }
@@ -151,7 +169,7 @@ export class CombatSystem {
     m.quaternion.copy(this.playerBlade.quaternion);
     this.world.scene.add(m);
     this.trailMesh = m;
-    this.trailTime = 0.2;
+    this.trailTime = 0.2 + this.state.combo * 0.01;
   }
 
   spawnSparks(pos: Vector3, count: number, color: number) {
@@ -166,6 +184,7 @@ export class CombatSystem {
 
   opponentSwing() {
     this.audio.playSwing(0.9);
+    this.triggerHaptic(0.5, 40);
     const dist = this.opponentBlade.position.distanceTo(this.playerBlade.position);
     if (dist < 1.5) {
       const isParry = this.blockActive && (performance.now() - this.lastSwingTime) < PARRY_WINDOW_MS;
@@ -175,25 +194,41 @@ export class CombatSystem {
       } else if (isParry) {
         this.audio.playParry();
         this.spawnSparks(this.playerBlade.position, 12, 0x00ffff);
+        this.triggerHaptic(1.0, 100);
       } else {
         this.audio.playHit();
         this.state.playerHealth = Math.max(0, this.state.playerHealth - 12);
         this.state.combo = 0;
         this.spawnSparks(this.playerBlade.position, 10, 0xff0000);
+        this.triggerHaptic(1.0, 120);
       }
     }
   }
 
   setOpponentPose(pos: Vector3, quat: Quaternion) {
-    this.opponentBlade.position.copy(pos);
-    this.opponentBlade.quaternion.copy(quat);
+    this.opponentBasePos.copy(pos);
+    if (this.opponentStunTime <= 0) {
+      this.opponentBlade.position.lerp(pos, 0.1);
+      this.opponentBlade.quaternion.slerp(quat, 0.1);
+    }
   }
 
   isOpponentBlocking(): boolean {
     return this.state.opponentStamina > 30 && Math.random() < 0.4;
   }
 
-  applyStunToOpponent(sec: number) {}
+  applyStunToOpponent(sec: number) {
+    this.opponentStunTime = Math.max(this.opponentStunTime, sec);
+    this.opponentBlade.position.add(new Vector3((Math.random()-0.5)*0.2, 0, (Math.random()-0.5)*0.2));
+  }
+
+  triggerHaptic(intensity: number, durationMs: number) {
+    const gp = this.world.input.xr.gamepads.right;
+    const actuator = (gp as any)?.gamepad?.hapticActuators?.[0];
+    if (actuator) {
+      actuator.pulse(intensity, durationMs).catch(()=>{});
+    }
+  }
 
   dispose() {
     this.world.scene.remove(this.playerBlade);
